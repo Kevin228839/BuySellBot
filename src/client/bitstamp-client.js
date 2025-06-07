@@ -34,7 +34,7 @@ class BitstampClient extends EventEmitter {
         const parsed = JSON.parse(data);
         console.log('Received message:', parsed);
         if(parsed.event === 'trade') {
-          this.emit('message', parsed);
+          this.emit('trade', parsed);
         }
       } catch (err) {
         console.error('Failed to parse message:', data);

@@ -3,7 +3,7 @@ const Redis = require('ioredis');
 require('dotenv').config({path: './src/config/.env'});
 const subscriber = new Redis();
 const channelClients = new Map();
-const allowedCryptocurrencySet = new Set(process.env.cryptocurrencies.split(',').map(e => e.trim()));
+const allowedChannelsSet = new Set(process.env.channels.split(',').map(e => e.trim()));
 const allowedActionSet = new Set(['subscribe', 'unsubscribe']);
 
 const wss = new WebSocket.Server({
@@ -17,8 +17,8 @@ wss.on('connection', (ws) => {
   });
   ws.on('message', async (message) => {
     let { action, channel } = JSON.parse(message.toString());
-    if (!(allowedActionSet.has(action)) || !(allowedCryptocurrencySet.has(channel))) {
-      ws.send('Invalid message format. Expected: {action: "subscribe"|"unsubscribe", channel: "btc"|"eth"}');
+    if (!(allowedActionSet.has(action)) || !(allowedChannelsSet.has(channel))) {
+      ws.send('Invalid message format. Expected: {action: "subscribe"|"unsubscribe", channel: "btcusd_rsi"|"btcusd_rsi"}');
       return;
     }
     if (action === 'subscribe') {
