@@ -1,10 +1,11 @@
 const WebSocket = require('ws');
-const Redis = require('ioredis');
+const { subscriber, registerMessageHandler } = require('./../pubsub/message-broker');
 require('dotenv').config({path: './src/config/.env'});
-const subscriber = new Redis();
-const channelClients = new Map();
 const allowedChannelsSet = new Set(process.env.channels.split(',').map(e => e.trim()));
 const allowedActionSet = new Set(['subscribe', 'unsubscribe']);
+
+const channelClients = new Map();
+registerMessageHandler(channelClients);
 
 const wss = new WebSocket.Server({
   noServer: true,
@@ -63,12 +64,6 @@ wss.on('connection', (ws) => {
         }
       }
     }
-  });
-});
-
-subscriber.on('message', (channel, message) => {
-  channelClients.get(channel).forEach((ws) => {
-    ws.send(message);
   });
 });
 

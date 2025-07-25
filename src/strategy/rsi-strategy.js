@@ -1,15 +1,16 @@
-const Redis = require('ioredis');
-const redis = new Redis();
+const bitstampClient = require('../client/bitstamp-client');
+const { publisher } = require('../pubsub/message-broker');
 
 class RSI {
-  constructor(client, period = 14) {
+  constructor(client, publisher, period = 14) {
+    console.log('RSI constructor called');
+    this.client = client;
+    this.publisher = publisher;
     this.period = period;
-    this.redis = redis;
-
-    // Per-currency state: store prevPrice, avgGain, avgLoss, count
+    // todo: the state data can grow very large. need to clean it up periodically
     this.state = {};
 
-    client.on('trade', (rawTrade) => this.handleTrade(rawTrade));
+    this.client.on('trade', (rawTrade) => this.handleTrade(rawTrade));
   }
 
   initState(currency) {
@@ -44,7 +45,6 @@ class RSI {
 
     const gain = Math.max(change, 0);
     const loss = Math.max(-change, 0);
-
     if (state.count < this.period) {
       // Calculate initial average gain/loss (simple average)
       state.avgGain = ((state.avgGain * state.count) + gain) / (state.count + 1);
@@ -62,7 +62,7 @@ class RSI {
 
       const key = `${currency}_rsi`;
       try {
-        await this.redis.publish(key, JSON.stringify({ rsi, timestamp: Date.now() }));
+        await this.publisher.publish(key, JSON.stringify({ rsi, timestamp: Date.now() }));
       } catch (error) {
         console.error('Failed to publish RSI to Redis:', error);
       }
@@ -71,4 +71,6 @@ class RSI {
   }
 }
 
-module.exports = RSI;
+const rsiInstance = new RSI(bitstampClient, publisher, 7);
+
+module.exports = rsiInstance;

@@ -7,6 +7,7 @@ class BitstampClient extends EventEmitter {
     super();
     this.cryptocurrencies = cryptocurrencies;
     this.ws = null;
+    console.log('BitstampClient constructor called');
   }
 
   connect() {
