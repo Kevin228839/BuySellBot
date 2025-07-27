@@ -62,11 +62,12 @@ class RSI {
 
       const key = `${currency}_rsi`;
       try {
-        await this.publisher.publish(key, JSON.stringify({ rsi, timestamp: Date.now() }));
+        var message = JSON.stringify({ key, rsi, timestamp: Date.now() });
+        await this.publisher.publish(key, message);
+        console.log(message);
       } catch (error) {
         console.error('Failed to publish RSI to Redis:', error);
       }
-      console.log(`[${currency}] RSI: ${rsi.toFixed(2)}`);
     }
   }
 }
