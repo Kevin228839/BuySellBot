@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  # Redis service
+  redis:
+    image: redis:7-alpine
+    container_name: buysellbot-redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # BuySellBot application
+  app:
+    build: .
+    env_file:
+      - ./src/config/.env
+    container_name: buysellbot-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
