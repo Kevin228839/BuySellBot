@@ -60,10 +60,10 @@ class RSI {
       const rs = state.avgLoss === 0 ? 100 : state.avgGain / state.avgLoss;
       const rsi = 100 - (100 / (1 + rs));
 
-      const key = `${currency}_rsi`;
+      const channel = `${currency}_rsi`;
       try {
-        var message = JSON.stringify({ key, rsi, timestamp: Date.now() });
-        await this.publisher.publish(key, message);
+        var message = JSON.stringify({ channel, rsi, timestamp: Date.now() });
+        await this.publisher.publish(channel, message);
         console.log(message);
       } catch (error) {
         console.error('Failed to publish RSI to Redis:', error);
