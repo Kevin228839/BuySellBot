@@ -23,3 +23,7 @@ Buysellbot is a trading signal generation bot. It uses the Bitstamp WebSocket AP
   ```json-example
   {"key":"ethusd_rsi","rsi":59.229167305411444,"timestamp":1753608051241}
   ```
+8. Unsubscribe from a channel
+  ```json
+  {"action": "unsubscribe", "channel": "btcusd_rsi"}
+  ```
