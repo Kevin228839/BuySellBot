@@ -15,8 +15,8 @@ services:
   # BuySellBot application
   app:
     build: .
-    env_file:
-      - ./src/config/.env
+    environment:
+      NODE_ENV: docker
     container_name: buysellbot-app
     restart: unless-stopped
     ports:

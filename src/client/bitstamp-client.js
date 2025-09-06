@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 const EventEmitter = require('events');
-require('dotenv').config({path: './src/config/.env'});
+const { cryptocurrencies } = require('../config/configuration');
 
 class BitstampClient extends EventEmitter {
   constructor(cryptocurrencies) {
@@ -56,7 +56,7 @@ class BitstampClient extends EventEmitter {
   }
 }
 
-const allowedCryptocurrencySet = new Set(process.env.cryptocurrencies.split(',').map(e => e.trim()));
+const allowedCryptocurrencySet = new Set(cryptocurrencies.split(',').map(e => e.trim()));
 // Create the singleton instance
 const bitstampClientInstance = new BitstampClient([...allowedCryptocurrencySet]);
 

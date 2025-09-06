@@ -6,7 +6,7 @@ Buysellbot is a trading signal generation bot. It uses the Bitstamp WebSocket AP
 3. The WebSocket server then sends these signals to all connected clients.
 # How to run the bot
 1. Clone the repository
-2. Create a .env file under the folder: src/config/ 
+2. Create a .env.docker file from src/config/.env.docker.template
 4. Run the bot
   ```bash
   docker-compose up --build

@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const { subscriber, registerMessageHandler } = require('./../pubsub/message-broker');
-require('dotenv').config({path: './src/config/.env'});
-const allowedChannelsSet = new Set(process.env.channels.split(',').map(e => e.trim()));
+const { channels } = require('../config/configuration');
+const allowedChannelsSet = new Set(channels.split(',').map(e => e.trim()));
 const allowedActionSet = new Set(['subscribe', 'unsubscribe']);
 
 const channelClients = new Map();
